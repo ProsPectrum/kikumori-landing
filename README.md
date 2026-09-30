@@ -106,6 +106,8 @@ Production hostname: **kikurae.com**. Hosting is **Netlify** (not Vercel). Dummy
 | `NEXT_PUBLIC_X_URL` | `https://x.com/KikuMorii` |
 | `NEXT_PUBLIC_THREADS_URL` | `https://www.threads.net/@itskiorae` |
 
+`SECRETS_SCAN_OMIT_KEYS=NEXT_PUBLIC_TURNSTILE_SITE_KEY` is already in `netlify.toml` so Netlify does not fail the build when the public site key is inlined into `.next`. Do not omit `TURNSTILE_SECRET_KEY`.
+
 In-memory token storage does not work across Netlify functions. Production must use Upstash.
 
 ### 2. Domain kikurae.com
