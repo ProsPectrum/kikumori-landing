@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Next.js App Router is adapted automatically (OpenNext).
+# Do not pin @netlify/plugin-nextjs unless you need a specific runtime.
