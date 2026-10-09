@@ -14,6 +14,7 @@ if (!existsSync(staticDir)) {
 }
 
 const clientRoots = [staticDir];
+const ofPathNeedles = ["/kikumori/c33", "/kikumori/c35", "/kikumori/c32", "/kikumori/c39", "/kikumori/c36"];
 
 function walk(dir, files = []) {
   let entries;
@@ -54,13 +55,24 @@ try {
     if (!file.endsWith(".html") && !file.endsWith(".rsc")) continue;
     const text = readFileSync(file, "utf8");
     if (text.includes(destination)) htmlHits.push(path.relative(root, file));
+    for (const n of ofPathNeedles) {
+      if (text.includes(n)) htmlHits.push(`${path.relative(root, file)} :: ${n}`);
+    }
   }
 } catch {
   // build output may not exist yet
 }
 
+function scanOfPaths(dir) {
+  return walk(dir).flatMap((file) => {
+    const text = readFileSync(file, "utf8");
+    return ofPathNeedles.filter((n) => text.includes(n)).map((n) => `${path.relative(root, file)} :: ${n}`);
+  });
+}
+
 const clientHits = clientRoots.flatMap(scanDir);
-const allHits = [...clientHits, ...htmlHits];
+const ofHits = clientRoots.flatMap(scanOfPaths);
+const allHits = [...clientHits, ...htmlHits, ...ofHits];
 
 if (allHits.length > 0) {
   console.error("Destination URL leaked into client-side build artifacts:");

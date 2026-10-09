@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { trackEvent } from "@/lib/analytics";
@@ -6,6 +7,7 @@ import { isTrustedMutation } from "@/lib/origin";
 import { enforceRateLimit } from "@/lib/rateLimit";
 import { getClientIp } from "@/lib/requestIp";
 import { jsonHeaders } from "@/lib/securityHeaders";
+import { SOURCE_COOKIE, isKnownSourceId } from "@/lib/trafficSources";
 import { processHumanVerification } from "@/lib/verifyHuman";
 
 export const dynamic = "force-dynamic";
@@ -58,7 +60,17 @@ export async function POST(request) {
     );
   }
 
-  const result = await processHumanVerification({ token, blockId, ip });
+  const jar = await cookies();
+  const sourceId = isKnownSourceId(jar.get(SOURCE_COOKIE)?.value)
+    ? jar.get(SOURCE_COOKIE).value
+    : "";
+
+  const result = await processHumanVerification({
+    token,
+    blockId,
+    ip,
+    sourceId,
+  });
   if (result.status !== 200) {
     await trackEvent({
       event: "turnstile_failed",

@@ -98,15 +98,22 @@ Production hostname: **kikurae.com**. Hosting is **Netlify** (not Vercel). Dummy
 | `ALLOWED_ORIGINS` | `https://kikurae.com,https://www.kikurae.com` |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | from Cloudflare Turnstile |
 | `TURNSTILE_SECRET_KEY` | from Cloudflare Turnstile (server only) |
-| `EXCLUSIVE_DESTINATION_URL` | age-gated URL (same as `.env.local`) |
+| `EXCLUSIVE_DESTINATION_URL` | fallback OF URL if source is unknown |
+| `EXCLUSIVE_DESTINATION_URL_IG_ITSKIORAE` | OF tracking link for Instagram itskiorae |
+| `EXCLUSIVE_DESTINATION_URL_IG_REALKIORAE` | OF tracking link for Instagram realkiorae |
+| `EXCLUSIVE_DESTINATION_URL_X_KIKUMORII` | OF tracking link for X KikuMorii |
+| `EXCLUSIVE_DESTINATION_URL_X_REALKIORAE` | OF tracking link for X RealKioRae |
+| `EXCLUSIVE_DESTINATION_URL_REDDIT_KIKUMORI` | OF tracking link for Reddit kikumori |
+| `STATS_PASSWORD` | password for `https://kikurae.com/stats` |
 | `UPSTASH_REDIS_REST_URL` | from [Upstash](https://upstash.com/) |
 | `UPSTASH_REDIS_REST_TOKEN` | from Upstash |
 | `TOKEN_STORE` | leave unset (or do not set `memory`) |
 | `NEXT_PUBLIC_INSTAGRAM_URL` | `https://www.instagram.com/itskiorae/` |
 | `NEXT_PUBLIC_X_URL` | `https://x.com/KikuMorii` |
 | `NEXT_PUBLIC_THREADS_URL` | `https://www.threads.net/@itskiorae` |
+| `NEXT_PUBLIC_REDDIT_URL` | `https://www.reddit.com/user/kikumori` |
 
-`SECRETS_SCAN_OMIT_KEYS=NEXT_PUBLIC_TURNSTILE_SITE_KEY` is already in `netlify.toml` so Netlify does not fail the build when the public site key is inlined into `.next`. Do not omit `TURNSTILE_SECRET_KEY`.
+`SECRETS_SCAN_OMIT_KEYS` in `netlify.toml` covers the public Turnstile site key plus the server destination env names so Netlify’s scan does not fail on the server bundle. Do not omit `TURNSTILE_SECRET_KEY`.
 
 In-memory token storage does not work across Netlify functions. Production must use Upstash.
 
@@ -134,6 +141,20 @@ Turnstile does **not** require the site to be proxied through Cloudflare. You on
 3. Hostnames: `kikurae.com`, `www.kikurae.com`, and `localhost` (for local testing with the real keys).
 4. Put the **site key** and **secret key** into Netlify env (table above).
 5. Redeploy so `NEXT_PUBLIC_TURNSTILE_SITE_KEY` is baked into the client bundle.
+
+### Tracking links for bios
+
+Put these in each social profile, not the bare domain:
+
+| Account | Bio URL |
+| --- | --- |
+| Instagram itskiorae | `https://kikurae.com/s/ig-itskiorae` |
+| Instagram realkiorae | `https://kikurae.com/s/ig-realkiorae` |
+| X KikuMorii | `https://kikurae.com/s/x-kikumorii` |
+| X RealKioRae | `https://kikurae.com/s/x-realkiorae` |
+| Reddit kikumori | `https://kikurae.com/s/reddit-kikumori` |
+
+Stats: `https://kikurae.com/stats` (password = `STATS_PASSWORD`). Daily counters live in Upstash Redis — no extra SQL database.
 
 ### 4. After go-live
 

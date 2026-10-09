@@ -18,6 +18,36 @@ test("destination is configured only on the server allowlist", () => {
   assert.equal(getDestinationUrl("unknown"), null);
 });
 
+test("source-scoped destination uses allowlisted env and stays off the JSON path", async () => {
+  process.env.EXCLUSIVE_DESTINATION_URL_IG_ITSKIORAE =
+    "https://exclusive-ig.example.invalid/c33";
+  assert.equal(
+    getDestinationUrl("exclusive", "ig-itskiorae"),
+    "https://exclusive-ig.example.invalid/c33",
+  );
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () =>
+    new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { "content-type": "application/json" },
+    });
+  try {
+    const result = await processHumanVerification({
+      token: "valid-token",
+      blockId: "exclusive",
+      ip: "127.0.0.1",
+      sourceId: "ig-itskiorae",
+    });
+    assert.equal(result.status, 200);
+    assert.ok(!JSON.stringify(result.body).includes("exclusive-ig.example.invalid"));
+    const token = result.body.redirectPath.replace("/r/", "");
+    const consumed = await consumeRedirectToken(token);
+    assert.equal(consumed.sourceId, "ig-itskiorae");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test("in-app browser detection is limited to embedded apps", () => {
   assert.equal(classifyUserAgent("Instagram 1.0").browserCategory, "instagram");
   assert.equal(classifyUserAgent("Mozilla/5.0 Chrome/120").browserCategory, "browser");
@@ -91,7 +121,7 @@ test("valid Turnstile issues an opaque one-time redirect path", async () => {
 });
 
 test("valid redirect token can be consumed once then rejected", async () => {
-  const { token } = await issueRedirectToken("exclusive", 60);
+  const { token } = await issueRedirectToken("exclusive", { ttlSeconds: 60 });
   const first = await consumeRedirectToken(token);
   assert.equal(first.status, "ok");
   assert.equal(first.blockId, "exclusive");
@@ -100,7 +130,7 @@ test("valid redirect token can be consumed once then rejected", async () => {
 });
 
 test("expired token is rejected", async () => {
-  const { token } = await issueRedirectToken("exclusive", 60);
+  const { token } = await issueRedirectToken("exclusive", { ttlSeconds: 60 });
   const { hashRedirectToken } = await import("../lib/redirectTokens.js");
   const { memoryStore } = await import("../lib/store/memory.js");
   await memoryStore.setJson(

@@ -8,7 +8,7 @@
     "build": "next build && node tests/scan-client-build.mjs",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --import ./tests/register-server-only.mjs --test tests/gate.test.mjs tests/scan-source.test.mjs",
+    "test": "node --import ./tests/register-server-only.mjs --test tests/gate.test.mjs tests/scan-source.test.mjs tests/sources.test.mjs",
     "test:scan": "node tests/scan-client-build.mjs",
     "test:acceptance": "node tests/http-acceptance.mjs"
   },

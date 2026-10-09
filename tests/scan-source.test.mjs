@@ -31,10 +31,21 @@ test("source, components, and public files do not contain the destination URL", 
     return true;
   });
 
+  const needles = [
+    needle,
+    "onlyfans.com/kikumori/c33",
+    "onlyfans.com/kikumori/c35",
+    "onlyfans.com/kikumori/c32",
+    "onlyfans.com/kikumori/c39",
+    "onlyfans.com/kikumori/c36",
+  ];
+
   const leaks = [];
   for (const file of files) {
     const text = readFileSync(file, "utf8");
-    if (text.includes(needle)) leaks.push(path.relative(root, file));
+    for (const item of needles) {
+      if (item && text.includes(item)) leaks.push(`${path.relative(root, file)} :: ${item}`);
+    }
   }
 
   assert.deepEqual(leaks, []);

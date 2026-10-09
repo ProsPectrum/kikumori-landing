@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { ALLOWED_EVENTS } from "@/lib/eventNames";
@@ -6,6 +7,7 @@ import { isTrustedMutation } from "@/lib/origin";
 import { enforceRateLimit } from "@/lib/rateLimit";
 import { getClientIp } from "@/lib/requestIp";
 import { jsonHeaders } from "@/lib/securityHeaders";
+import { SOURCE_COOKIE, isKnownSourceId } from "@/lib/trafficSources";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -48,9 +50,14 @@ export async function POST(request) {
     );
   }
 
+  const jar = await cookies();
+  const source = isKnownSourceId(jar.get(SOURCE_COOKIE)?.value)
+    ? jar.get(SOURCE_COOKIE).value
+    : "";
+
   await trackEvent({
     event: payload.event,
-    source: payload.source,
+    source,
     campaign: payload.campaign,
     blockId: payload.blockId,
     socialId: payload.socialId,
