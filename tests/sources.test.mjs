@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 import { TRAFFIC_SOURCES, isKnownSourceId } from "../lib/trafficSources.js";
 import { recordClick, recordPageView, getDashboardStats } from "../lib/stats.js";
+import { formatConversion, ofConversionRate } from "../lib/statsMath.js";
 import { resetMemoryStore } from "../lib/store/memory.js";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -33,4 +34,14 @@ test("daily counters attribute views and clicks per source", async () => {
   assert.equal(row.all.clicks.x, 1);
   const other = data.sources.find((item) => item.id === "x-kikumorii");
   assert.equal(other.all.views, 0);
+  assert.equal(row.series.at(-1).views, 2);
+  assert.equal(row.series.at(-1).clicks.exclusive, 1);
+  assert.equal(row.series[0].views, 0);
+});
+
+test("OnlyFans conversion is exclusive clicks divided by views", () => {
+  assert.equal(ofConversionRate(0, 1), null);
+  assert.equal(ofConversionRate(4, 1), 0.25);
+  assert.equal(formatConversion(0.25), "25.0%");
+  assert.equal(formatConversion(null), "—");
 });
