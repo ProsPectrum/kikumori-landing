@@ -109,7 +109,7 @@ Production hostname: **kikurae.com**. Hosting is **Netlify** (not Vercel). Dummy
 | `UPSTASH_REDIS_REST_TOKEN` | from Upstash |
 | `TOKEN_STORE` | leave unset (or do not set `memory`) |
 | `NEXT_PUBLIC_INSTAGRAM_URL` | `https://www.instagram.com/itskiorae/` |
-| `NEXT_PUBLIC_X_URL` | `https://x.com/KikuMorii` |
+| `NEXT_PUBLIC_X_URL` | `https://x.com/RealKioRae` |
 
 `SECRETS_SCAN_OMIT_KEYS` in `netlify.toml` covers the public Turnstile site key plus the server destination env names so Netlify’s scan does not fail on the server bundle. Do not omit `TURNSTILE_SECRET_KEY`.
 
