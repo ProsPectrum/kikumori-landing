@@ -4,12 +4,23 @@ import path from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
+import { getPublicSocialLinks } from "../lib/publicProfile.js";
 import { TRAFFIC_SOURCES, isKnownSourceId } from "../lib/trafficSources.js";
 import { recordClick, recordPageView, getDashboardStats } from "../lib/stats.js";
 import { formatConversion, ofConversionRate } from "../lib/statsMath.js";
 import { resetMemoryStore } from "../lib/store/memory.js";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+test("Instagram button uses realkiorae only for that tracking source", () => {
+  const defaultIg = getPublicSocialLinks("ig-itskiorae").find((row) => row.id === "instagram");
+  const redditIg = getPublicSocialLinks("reddit-kikumori").find((row) => row.id === "instagram");
+  const realIg = getPublicSocialLinks("ig-realkiorae").find((row) => row.id === "instagram");
+  assert.equal(defaultIg.href, "https://www.instagram.com/itskiorae/");
+  assert.equal(redditIg.href, "https://www.instagram.com/itskiorae/");
+  assert.equal(realIg.href, "https://www.instagram.com/realkiorae/");
+  assert.equal(getPublicSocialLinks("").find((row) => row.id === "instagram").href, "https://www.instagram.com/itskiorae/");
+});
 
 test("traffic source ids are unique and do not embed destination URLs", () => {
   const ids = TRAFFIC_SOURCES.map((row) => row.id);
