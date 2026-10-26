@@ -17,3 +17,24 @@ body {
   color: rgb(255, 255, 255);
   color-scheme: dark;
 }
+
+@keyframes exclusive-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.28);
+  }
+  50% {
+    box-shadow: 0 0 34px rgba(125, 211, 252, 0.7);
+  }
+}
+
+.exclusive-glow {
+  animation: exclusive-pulse 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .exclusive-glow {
+    animation: none;
+    box-shadow: 0 0 22px rgba(56, 189, 248, 0.45);
+  }
+}
