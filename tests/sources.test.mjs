@@ -4,7 +4,7 @@ import path from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { getPublicSocialLinks } from "../lib/publicProfile.js";
+import { getCreatorProfile, getPublicSocialLinks } from "../lib/publicProfile.js";
 import { TRAFFIC_SOURCES, isKnownSourceId } from "../lib/trafficSources.js";
 import { recordClick, recordPageView, getDashboardStats } from "../lib/stats.js";
 import { formatConversion, ofConversionRate } from "../lib/statsMath.js";
@@ -26,7 +26,15 @@ test("traffic source ids are unique and do not embed destination URLs", () => {
   const ids = TRAFFIC_SOURCES.map((row) => row.id);
   assert.equal(new Set(ids).size, ids.length);
   assert.equal(isKnownSourceId("ig-itskiorae"), true);
+  assert.equal(isKnownSourceId("fb-kikumori"), true);
   assert.equal(isKnownSourceId("instagram"), false);
+  assert.deepEqual(getPublicSocialLinks("fb-kikumori"), []);
+  assert.equal(getCreatorProfile("fb-kikumori").heroSrc, "/hero-facebook.png");
+  assert.equal(getCreatorProfile("fb-kikumori").exclusiveSrc, "/exclusive-facebook.png");
+  assert.equal(getCreatorProfile("ig-itskiorae").heroSrc, "/hero.png");
+  assert.equal(getCreatorProfile("ig-itskiorae").exclusiveSrc, "/exclusive.png");
+  assert.equal(getPublicSocialLinks("ig-itskiorae").some((row) => row.id === "instagram"), true);
+  assert.equal(getPublicSocialLinks("ig-itskiorae").some((row) => row.id === "facebook"), false);
 
   const sourceFile = readFileSync(path.join(root, "lib/trafficSources.js"), "utf8");
   assert.equal(sourceFile.includes("onlyfans.com"), false);

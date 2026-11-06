@@ -2,7 +2,7 @@ import { cookies, headers } from "next/headers";
 
 import CreatorProfile from "@/components/CreatorProfile";
 import { trackEvent } from "@/lib/analytics";
-import { creator, EXCLUSIVE_BLOCK_ID, getPublicSocialLinks } from "@/lib/publicProfile";
+import { EXCLUSIVE_BLOCK_ID, getCreatorProfile, getPublicSocialLinks } from "@/lib/publicProfile";
 import { SOURCE_COOKIE, isKnownSourceId } from "@/lib/trafficSources";
 
 export const dynamic = "force-dynamic";
@@ -24,7 +24,7 @@ export default async function Home({ searchParams }) {
 
   return (
     <CreatorProfile
-      creator={creator}
+      creator={getCreatorProfile(sourceId)}
       socials={getPublicSocialLinks(sourceId)}
       exclusiveBlockId={EXCLUSIVE_BLOCK_ID}
       turnstileSiteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}

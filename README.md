@@ -104,6 +104,7 @@ Production hostname: **kikurae.com**. Hosting is **Netlify** (not Vercel). Dummy
 | `EXCLUSIVE_DESTINATION_URL_X_KIKUMORII` | OF tracking link for X KikuMorii |
 | `EXCLUSIVE_DESTINATION_URL_X_REALKIORAE` | OF tracking link for X RealKioRae |
 | `EXCLUSIVE_DESTINATION_URL_REDDIT_KIKUMORI` | OF tracking link for Reddit kikumori |
+| `EXCLUSIVE_DESTINATION_URL_FB_KIKUMORI` | OF tracking link for Facebook Kiku Mori |
 | `STATS_PASSWORD` | password for `https://kikurae.com/stats` |
 | `UPSTASH_REDIS_REST_URL` | from [Upstash](https://upstash.com/) |
 | `UPSTASH_REDIS_REST_TOKEN` | from Upstash |
@@ -152,6 +153,7 @@ Put these in each social profile, not the bare domain:
 | X KikuMorii | `https://kikurae.com/s/x-kikumorii` |
 | X RealKioRae | `https://kikurae.com/s/x-realkiorae` |
 | Reddit kikumori | `https://kikurae.com/s/reddit-kikumori` |
+| Facebook Kiku Mori | `https://kikurae.com/s/fb-kikumori` |
 
 Stats: `https://kikurae.com/stats` (password = `STATS_PASSWORD`). Daily counters live in Upstash Redis — no extra SQL database.
 

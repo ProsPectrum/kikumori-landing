@@ -44,6 +44,8 @@ const ICON_COLOR = {
 };
 
 export default function SocialLinks({ links }) {
+  if (!links?.length) return null;
+
   return (
     <div className="mt-3 space-y-3">
       {links.map((link) => (

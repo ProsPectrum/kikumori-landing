@@ -14,7 +14,7 @@ if (!existsSync(staticDir)) {
 }
 
 const clientRoots = [staticDir];
-const ofPathNeedles = ["/kikumori/c33", "/kikumori/c35", "/kikumori/c32", "/kikumori/c39", "/kikumori/c36"];
+const ofPathNeedles = ["/kikumori/c33", "/kikumori/c35", "/kikumori/c32", "/kikumori/c39", "/kikumori/c36", "/kikumori/c40"];
 
 function walk(dir, files = []) {
   let entries;

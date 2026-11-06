@@ -38,6 +38,7 @@ test("source, components, and public files do not contain the destination URL", 
     "onlyfans.com/kikumori/c32",
     "onlyfans.com/kikumori/c39",
     "onlyfans.com/kikumori/c36",
+    "onlyfans.com/kikumori/c40",
   ];
 
   const leaks = [];
