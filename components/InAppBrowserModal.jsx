@@ -42,20 +42,11 @@ export default function InAppBrowserModal({ open, onClose, pageUrl }) {
           <li>• Choose &quot;Open in browser&quot;</li>
         </ul>
         <div className="mt-6 flex flex-col gap-3">
-          {pageUrl ? (
-            <a
-              href={pageUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full bg-[#f7f3ea] px-5 py-3 text-center text-sm font-semibold text-[#16141c]"
-            >
-              Open in browser
-            </a>
-          ) : null}
           <button
             type="button"
             onClick={copyLink}
-            className="rounded-full border border-white/15 px-5 py-3 text-sm text-[#cfc6b8]"
+            disabled={!pageUrl}
+            className="rounded-full bg-[#f7f3ea] px-5 py-3 text-sm font-semibold text-[#16141c] disabled:opacity-40"
           >
             {copied ? "Link copied" : "Copy link"}
           </button>
@@ -64,7 +55,7 @@ export default function InAppBrowserModal({ open, onClose, pageUrl }) {
             onClick={onClose}
             className="rounded-full border border-white/15 px-5 py-3 text-sm text-[#cfc6b8]"
           >
-            Close
+            Cancel
           </button>
         </div>
       </div>
