@@ -63,7 +63,9 @@ export async function POST(request) {
   const jar = await cookies();
   const sourceId = isKnownSourceId(jar.get(SOURCE_COOKIE)?.value)
     ? jar.get(SOURCE_COOKIE).value
-    : "";
+    : isKnownSourceId(payload?.sourceId)
+      ? payload.sourceId
+      : "";
 
   const result = await processHumanVerification({
     token,

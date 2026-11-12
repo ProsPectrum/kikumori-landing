@@ -13,6 +13,8 @@ export default function ExclusiveButton({
   imageSrc,
   imageAlt,
   caption,
+  sourceId = "",
+  shareUrl = "",
 }) {
   const [inAppOpen, setInAppOpen] = useState(false);
   const [turnstileOpen, setTurnstileOpen] = useState(false);
@@ -36,7 +38,7 @@ export default function ExclusiveButton({
           method: "POST",
           headers: { "content-type": "application/json" },
           credentials: "same-origin",
-          body: JSON.stringify({ token, blockId }),
+          body: JSON.stringify({ token, blockId, sourceId }),
         });
         const data = await response.json().catch(() => ({}));
         const path = data.redirectPath;
@@ -57,7 +59,7 @@ export default function ExclusiveButton({
         setBusy(false);
       }
     },
-    [blockId],
+    [blockId, sourceId],
   );
 
   function handleClick() {
@@ -124,7 +126,14 @@ export default function ExclusiveButton({
       <InAppBrowserModal
         open={inAppOpen}
         onClose={() => setInAppOpen(false)}
-        pageUrl={typeof window === "undefined" ? "" : window.location.href}
+        pageUrl={
+          shareUrl ||
+          (typeof window === "undefined"
+            ? ""
+            : sourceId
+              ? `${window.location.origin}/s/${sourceId}`
+              : window.location.href)
+        }
       />
       <TurnstileModal
         open={turnstileOpen}

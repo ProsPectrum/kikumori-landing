@@ -5,7 +5,7 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
 import { getCreatorProfile, getPublicSocialLinks } from "../lib/publicProfile.js";
-import { TRAFFIC_SOURCES, isKnownSourceId } from "../lib/trafficSources.js";
+import { TRAFFIC_SOURCES, isKnownSourceId, sourceIdFromPathname } from "../lib/trafficSources.js";
 import { recordClick, recordPageView, getDashboardStats } from "../lib/stats.js";
 import { formatConversion, ofConversionRate } from "../lib/statsMath.js";
 import { resetMemoryStore } from "../lib/store/memory.js";
@@ -28,6 +28,10 @@ test("traffic source ids are unique and do not embed destination URLs", () => {
   assert.equal(isKnownSourceId("ig-itskiorae"), true);
   assert.equal(isKnownSourceId("fb-kikumori"), true);
   assert.equal(isKnownSourceId("instagram"), false);
+  assert.equal(sourceIdFromPathname("/s/fb-kikumori"), "fb-kikumori");
+  assert.equal(sourceIdFromPathname("/s/fb-kikumori/"), "fb-kikumori");
+  assert.equal(sourceIdFromPathname("/s/unknown"), "");
+  assert.equal(sourceIdFromPathname("/"), "");
   assert.deepEqual(getPublicSocialLinks("fb-kikumori"), []);
   assert.equal(getCreatorProfile("fb-kikumori").heroSrc, "/hero-facebook.png");
   assert.equal(getCreatorProfile("fb-kikumori").exclusiveSrc, "/exclusive-facebook.png");

@@ -18,6 +18,8 @@ export default function CreatorProfile({
   socials,
   exclusiveBlockId,
   turnstileSiteKey,
+  sourceId = "",
+  shareUrl = "",
 }) {
   return (
     <main className="relative min-h-dvh bg-neutral-950 text-white">
@@ -60,6 +62,8 @@ export default function CreatorProfile({
             imageSrc={creator.exclusiveSrc}
             imageAlt={creator.exclusiveAlt}
             caption={creator.exclusiveCaption}
+            sourceId={sourceId}
+            shareUrl={shareUrl}
           />
         </div>
 

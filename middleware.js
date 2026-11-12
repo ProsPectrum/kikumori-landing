@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { SECURITY_HEADERS } from "./lib/securityHeaders";
+import { SOURCE_COOKIE, sourceIdFromPathname } from "./lib/trafficSources";
 
 function randomSessionId() {
   const bytes = new Uint8Array(24);
@@ -13,6 +14,17 @@ export function middleware(request) {
 
   for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
     response.headers.set(key, value);
+  }
+
+  const sourceId = sourceIdFromPathname(request.nextUrl.pathname);
+  if (sourceId) {
+    response.cookies.set(SOURCE_COOKIE, sourceId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30,
+    });
   }
 
   if (!request.cookies.get("kiku_sid")) {
